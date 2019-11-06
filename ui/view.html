@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View {{data.studentID}}'s grade</title>
+</head>
+<body>
+<p>Grade: {{data.grade}}&nbsp;<a href = "/report/{{data.studentID}}">Generate Report</a></p>
+<table border="1">
+        {{each data.details}}
+        <tr>
+            <td>
+            {{$value.status}} {{if $value.status == "RTE"}} ({{$value.errno}}){{/if}}
+            </td>
+            <td>
+            {{if $value.status == "WA"}}
+                {{each $value.stdout}}
+                    <p>{{$value}}</p>
+                {{/each}}
+            {{/if}}
+            {{if $value.status == "CE"}}
+                {{$value.msg}}
+            {{/if}}
+            {{if $value.status == "RTE"}}
+                {{$value.stderr}}
+            {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+</table>
+</body>
+</html>

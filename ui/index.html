@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VG101-2 HW Grade Display</title>
+</head>
+<body>
+{{if graded}}
+<div class="main">
+    {{each data}}
+    <li>
+        <a href = "view/{{$value.studentID}}">{{$value.studentID}} : {{$value.grade}}</a>
+    </li>
+    {{/each}}
+</div>
+{{/if}}
+</body>
+</html>

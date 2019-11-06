@@ -1,2 +1,8 @@
 2019/10/30
 	- Write diff and compilation tools.
+
+2019/11/5
+	- Fixed the bug in async executing
+	- Fixed the bug of refernce count
+	- Modified the output data structure
+	- Added display system

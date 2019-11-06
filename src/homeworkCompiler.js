@@ -12,34 +12,41 @@ let extname = {
     "C++14": ".cpp",
     "C++17": ".cpp"
 };
-let parser = /.*_[A-Z][a-z]+[A-Z]*_s\d+_hw[4-8].*.[c|C].*/;
+let parser = /.*_[A-Z][a-z]+[A-Z]*?_s(\d+)_hw[4-8].*.[c|C].*/;
 
 let compileEvent = new events.EventEmitter();
 function compile(lang) {
-    fs.readdir('../source/', function(err, files) {
+    fs.readdir('../source/', (err, files) => {
         if(err) {
-            console.log(err);
+            console.error(err);
         } else {
             let dataJson = []; // All data for homework files
             let compilationJobCnt = 0;
             let fioJobCnt = 0;
 
-            files.forEach(function(filename) {
+            files.forEach((filename) => {
                 let curId = dataJson.length;
-                dataJson.push({source: filename, bin: "", errorMsg: ""});
+                dataJson.push({studentID: "",source: filename, bin: "", errorMsg: ""});
 
                 if(path.extname(filename).toLowerCase() !== extname[lang]) {
                     dataJson[curId].errorMsg = "Wrong Extension Name! ";
                     return;
                 }
-                if(!parser.exec(filename)) dataJson[curId].errorMsg = "Bad File Name!";
+
+                let parse = parser.exec(filename);
+                if(!parse) {
+                    dataJson[curId].errorMsg = "Bad File Name!";
+                    dataJson[curId].studentID = filename;
+                } else {
+                    dataJson[curId].studentID = parse[1];
+                }
 
                 let fullFilename = "../source/" + filename;
                 let comp = new Compiler(lang);
                 comp.addSource(fullFilename);
                 compilationJobCnt++;
                 comp.compile("../bin/" + path.basename(filename, path.extname(filename)));
-                comp.events.on("compileFinish", function(arg) {
+                comp.events.on("compileFinish", (arg) => {
                     if(arg.status !== 0) {
                         if(arg.stderr) {
                             fioJobCnt++;
